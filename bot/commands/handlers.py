@@ -1,4 +1,5 @@
 from aiogram.filters import CommandObject
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from bot import db
@@ -38,6 +39,24 @@ async def year_command(message: Message):
     await message.reply(f'Расходы за год {expense}')
 
 
-async def handler_text(message: Message) -> Message:
-    await db.Expense.create_communication_between_tables(message.from_user.id, message.html_text)
-    return await message.reply('Расход добавлен')
+async def all_categories_command(message: Message):
+    # res = await db.Category.category_list()
+    await message.reply(f'{await db.Category.category_list()}')
+
+
+async def create_command(message: Message, state: FSMContext):
+    await message.reply('Введите категорию и псевдонимы')
+    await state.set_state(db.BuildCategory.build_category)
+
+
+async def handler_create_category(message: Message, state: FSMContext):
+    await db.CustomCategory.create_category(message.text)
+    await message.reply('Категория добавлена')
+    await state.clear()
+
+
+async def handler_text(message: Message):
+    result: bool = await db.Expense.create_communication_between_tables(message.from_user.id, message.html_text)
+    if result:
+        await message.reply('Расход добавлен')
+    await message.reply('Такой категории нет')

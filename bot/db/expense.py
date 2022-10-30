@@ -28,23 +28,40 @@ class Expense:
         sum_for_month = await cls._select(user_id, date, today)
         return sum_for_month
 
-    @classmethod
-    async def create_communication_between_tables(cls, user_id: int, text: str):
-        category, price = cls._parse_text(text)
+    @staticmethod
+    async def create_communication_between_tables(user_id: int, text: str):
+        category, price = db.CustomCategory.parse_text(text)
         user_obj: db.User = await db.database.session.get(db.User, user_id)
+
         query_category: Select = (
             select(db.Category).
             where(or_(db.Category.name_category == category, db.Category.aliases.like(f'%{category}%')))
         )
         category_obj: db.Category = (await db.database.session.execute(query_category)).scalars().first()
-        await db.Price.create_price(amount=price, user_id=user_obj.user_id, category_id=category_obj.id)
 
-    @staticmethod
-    def _parse_text(text: str):
-        list_word = text.split(' ')
-        if len(list_word) == 2:
-            if isinstance(list_word[0], str) and isinstance(int(list_word[1]), int):
-                return list_word[0].lower(), int(list_word[1])
+        if category_obj:
+            await db.Price.create_price(amount=price, user_id=user_obj.user_id, category_id=category_obj.id)
+            return True
+
+        query_category_custom: Select = (
+            select(db.CustomCategory).
+            where(or_(db.CustomCategory.name_category == category, db.CustomCategory.aliases.like(f'%{category}%')))
+        )
+        custom_category_obj: db.CustomCategory = (await db.database.session.execute(query_category_custom)).scalars().first()
+        print(custom_category_obj.id)
+        await db.Price.create_price(amount=int(price), user_id=user_obj.user_id, custom_category_id=custom_category_obj.id)
+
+        if custom_category_obj:
+            return True
+
+        return False
+
+    # @staticmethod
+    # def _parse_text(text: str) -> tuple[str, int]:
+    #     list_word = text.split(' ')
+    #     if len(list_word) == 2:
+    #         if isinstance(list_word[0], str) and isinstance(int(list_word[1]), int):
+    #             return list_word[0].lower(), int(list_word[1])
 
     @staticmethod
     async def _select(user_id, date, today=None) -> Select:

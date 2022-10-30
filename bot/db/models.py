@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, VARCHAR, Date, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 
-from bot.db.sql_crud import AdminModelUser, AdminModelCategory, AdminModelPrice
+from bot.db.admin_model import AdminModelUser, AdminModelCategory, AdminModelPrice, AdminModelCustomCategory
 
 
 BaseModel = declarative_base()
@@ -27,6 +27,14 @@ class Category(BaseModel, AdminModelCategory):
     aliases = Column(String(150))
 
 
+class CustomCategory(BaseModel, AdminModelCustomCategory):
+    __tablename__ = 'custom_categories'
+
+    id = Column(Integer(), primary_key=True, autoincrement=True)
+    name_category = Column(String(100), unique=True, nullable=False)
+    aliases = Column(String(150))
+
+
 class Price(BaseModel, AdminModelPrice):
 
     __tablename__ = 'prices'
@@ -35,6 +43,5 @@ class Price(BaseModel, AdminModelPrice):
     amount = Column(Integer(), nullable=False)
     date = Column(Date, default=datetime.today())
     user_id = Column(Integer(), ForeignKey('users.user_id'))
-    category_id = Column(Integer(), ForeignKey('categories.id'))
-
-
+    category_id = Column(Integer(), ForeignKey('categories.id'), nullable=True)
+    custom_category_id = Column(Integer(), ForeignKey('custom_categories.id'), nullable=True)

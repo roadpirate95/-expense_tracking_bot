@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+    db:
+      image: crazycapivara/postgres-postgis:10-pgh3
+      restart: always
+      environment:
+        POSTGRES_PASSWORD: vlad
+      volumes:
+        - bornes:/var/lib/postgresql/data
+      ports:
+        - '5432:5432'
+
+    bot:
+      build: .
+      command:
+          bash -c "sudo chmod +x comands.sh && comands.sh"
+      depends_on:
+        - db
+
+
+volumes:
+  bornes:
+
+
+
