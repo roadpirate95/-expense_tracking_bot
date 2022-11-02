@@ -2,4 +2,6 @@ from aiogram.fsm.state import StatesGroup, State
 
 
 class BuildCategory(StatesGroup):
-    build_category = State()
+    set_name = State()
+    question = State()
+    set_alias = State()

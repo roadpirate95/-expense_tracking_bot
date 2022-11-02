@@ -1,4 +1,5 @@
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
 
 import asyncio
 import logging
@@ -10,7 +11,8 @@ import db
 
 async def main():
     logging.basicConfig(level=logging.INFO)
-    dp = Dispatcher()
+    storage = MemoryStorage()
+    dp = Dispatcher(storage=storage)
     bot = Bot(token=config.TOKEN)
     register_user_commands(dp)
     await db.create_categories()

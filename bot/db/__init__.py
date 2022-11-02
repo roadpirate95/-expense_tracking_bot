@@ -1,9 +1,8 @@
-__all__ = ['database', 'BaseModel', 'User', 'Category', 'CustomCategory', 'Price', 'Expense', 'create_categories',
-           'BuildCategory']
+__all__ = ['database', 'BaseModel', 'User', 'Category', 'Price', 'Expense', 'create_categories', 'BuildCategory',
+           'check_for_availability']
 
-# from .models import BaseModel
 from .engine import database
-from .models import BaseModel, User, Category, CustomCategory, Price
-from .supporting import create_categories
+from .models import BaseModel, User, Category, Price
+from .supporting import create_categories, check_for_availability
 from .expense import Expense
 from .state import BuildCategory
