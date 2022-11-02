@@ -37,7 +37,7 @@ class Expense:
             select(db.Category).
             where(and_(
                   or_(db.Category.name_category == category, db.Category.aliases.like(f'%{category}%')),
-                  or_(db.Category.id_user == user_id, db.Category.id_user == None)))
+                  or_(db.Category.id_user == user_id, db.Category.id_user is None)))
 
         )
         category_obj: db.Category = (await db.database.session.execute(query_category)).scalars().first()

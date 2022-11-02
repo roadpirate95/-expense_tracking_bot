@@ -44,7 +44,7 @@ class Category(BaseModel):
     async def category_list(cls, user_id):
         return (await db.database.session.execute(
             select(cls.name_category, cls.aliases).
-            where(or_(cls.id_user == user_id, cls.id_user == None)))).all()
+            where(or_(cls.id_user == user_id, cls.id_user is None)))).all()
 
     @classmethod
     async def create_category(cls, user_id: int, category: str, alias=None):
@@ -73,5 +73,3 @@ class Price(BaseModel):
         create_price_object = cls(**kwargs)
         db.database.session.add(create_price_object)
         await db.database.session.commit()
-
-

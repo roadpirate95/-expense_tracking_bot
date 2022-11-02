@@ -1,9 +1,7 @@
 __all__ = ['register_user_commands', 'commands_for_bot']
 
-import re
 
 from aiogram import Router, F
-from aiogram.filters import StateFilter
 from aiogram.filters.command import Command
 
 
@@ -42,10 +40,3 @@ def register_user_commands(router: Router) -> None:
         db.BuildCategory.set_alias
     )
     router.message.register(handler_text, F.text.regexp(r'^[а-яА-Я][^\t\v\r\n\f-!..]*\s\d*$'))
-
-
-
-
-
-
-

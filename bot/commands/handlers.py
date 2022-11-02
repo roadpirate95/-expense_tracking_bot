@@ -1,5 +1,3 @@
-from typing import Union
-
 from aiogram.filters import CommandObject
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
@@ -54,12 +52,15 @@ async def all_categories_command(message: Message):
     for category_num in range(len(all_user_categories)):
         if all_user_categories[category_num] != all_user_categories[-1]:
             if all_user_categories[category_num][1]:
-                message_for_user += f'{category_num+1}) Категория: {all_user_categories[category_num][0]},{all_user_categories[category_num][1]}\n'
+                message_for_user += f'{category_num+1}) Категория: ' \
+                                    f'{all_user_categories[category_num][0]},{all_user_categories[category_num][1]}\n'
             else:
-                message_for_user += f'{category_num + 1}) Категория: {all_user_categories[category_num][0]}\n'
+                message_for_user += f'{category_num + 1}) Категория: ' \
+                                    f'{all_user_categories[category_num][0]}\n'
         else:
             if all_user_categories[category_num][1]:
-                message_for_user += f'{category_num + 1}) Категория: {all_user_categories[category_num][0]},{all_user_categories[category_num][1]}'
+                message_for_user += f'{category_num + 1}) Категория: ' \
+                                    f'{all_user_categories[category_num][0]},{all_user_categories[category_num][1]}'
             else:
                 message_for_user += f'{category_num + 1}) Категория: {all_user_categories[category_num][0]}'
     await message.answer(f'{message_for_user}')
@@ -67,9 +68,8 @@ async def all_categories_command(message: Message):
 
 async def create_command(message: Message, state: FSMContext):
     """Обрабатывает команду /create, устанавливает состояние в db.BuildCategory.set_name"""
-    # await state.set_state(db.BuildCategory.set_name)
+    await state.set_state(db.BuildCategory.set_name)
     await message.reply('Введите категорию')
-
 
 
 async def get_name_category(message: Message, state: FSMContext):
@@ -122,4 +122,3 @@ async def handler_text(message: Message):
     """Обрабатывает текст внесения расхода и добавляет расход  в базу"""
     result: bool = await db.Expense.adding_an_expense(message.from_user.id, message.html_text)
     await message.reply('Расход добавлен') if result else await message.reply('Такой категории нет')
-
