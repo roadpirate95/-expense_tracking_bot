@@ -132,3 +132,7 @@ async def handler_text(message: Message, state: FSMContext):
     result: bool = await db.Expense.adding_an_expense(message.from_user.id, message.html_text)
     await message.reply('Расход добавлен') if result else await message.reply('Такой категории нет')
     await state.clear()
+
+
+async def spam(message: Message):
+    await message.reply("Не знаю такой команды")

@@ -6,7 +6,8 @@ from aiogram.filters.command import Command
 
 
 from bot.commands.handlers import start, help_command, today_command, month_command, year_command, handler_text, \
-    all_categories_command, create_command, get_name_category, answer_is_no, answer_is_yes, handler_aliases, expense
+    all_categories_command, create_command, get_name_category, answer_is_no, answer_is_yes, handler_aliases, expense, \
+    spam
 from bot.commands.bot_commands import commands_for_bot
 from bot.commands.keyboards import inline_markup
 from bot import db
@@ -50,3 +51,4 @@ def register_user_commands(router: Router) -> None:
         F.text.regexp(r'^[а-яА-Я][^\t\v\r\n\f-!..]*\s\d*$'),
         db.BuildExpense.set_expense
     )
+    router.message.register(spam)
