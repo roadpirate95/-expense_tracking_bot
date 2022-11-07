@@ -5,4 +5,3 @@ load_dotenv()
 
 TOKEN = os.getenv('TOKEN')
 URL_db = os.getenv('URL_db')
-ADMIN = os.getenv('ADMIN')

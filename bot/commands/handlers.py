@@ -67,7 +67,11 @@ async def all_categories_command(message: Message):
 
 
 async def create_command(message: Message, state: FSMContext):
-    """Обрабатывает команду /create, устанавливает состояние в db.BuildCategory.set_name"""
+    """
+    Обрабатывает команду /create для создания пользовательской категории,
+    устанавливает состояние в db.BuildCategory.set_name
+    """
+
     await state.set_state(db.BuildCategory.set_name)
     await message.reply('Введите категорию')
 
@@ -118,7 +122,13 @@ async def handler_aliases(message: Message, state: FSMContext):
         await message.reply('Такая категория или псевдоним уже существует!\nПовторите попытку')
 
 
-async def handler_text(message: Message):
+async def expense(message: Message, state: FSMContext):
+    await message.reply('Введите расход. Ввод должен быть: "Категория" "цена"')
+    await state.set_state(db.BuildExpense.set_expense)
+
+
+async def handler_text(message: Message, state: FSMContext):
     """Обрабатывает текст внесения расхода и добавляет расход  в базу"""
     result: bool = await db.Expense.adding_an_expense(message.from_user.id, message.html_text)
     await message.reply('Расход добавлен') if result else await message.reply('Такой категории нет')
+    await state.clear()

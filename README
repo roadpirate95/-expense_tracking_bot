@@ -1,0 +1,15 @@
+## Телеграм бот учета финансов ##
+
+Чтобы начать использовать бота:
+
+1)Запустите Docker (скачать https://docs.docker.com/get-docker/)
+
+2)git clone https://github.com/roadpirate95/-expense_tracking_bot.git
+
+3)Получить токен у https://t.me/BotFather
+
+4)В файле .env прописать полученный токен
+
+5)В файлах docker-compose.yml, .env вмсето <пароль> указать любой свой. Так же исправляем файл alembic.ini(56с.)
+
+6)В командной строке прописываем docker-compose up -d --build

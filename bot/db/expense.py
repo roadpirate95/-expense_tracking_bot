@@ -30,14 +30,14 @@ class Expense:
 
     @staticmethod
     async def adding_an_expense(user_id: int, text: str):
+        """Функция для создания объекта цены и связей в нем для других таблиц"""
         category, price = db.Category.parse_text(text)
         user_obj: db.User = await db.database.session.get(db.User, user_id)
-
         query_category: Select = (
             select(db.Category).
             where(and_(
                   or_(db.Category.name_category == category, db.Category.aliases.like(f'%{category}%')),
-                  or_(db.Category.id_user == user_id, db.Category.id_user is None)))
+                  or_(db.Category.id_user == user_id, db.Category.id_user == None)))
 
         )
         category_obj: db.Category = (await db.database.session.execute(query_category)).scalars().first()
@@ -49,6 +49,7 @@ class Expense:
 
     @staticmethod
     async def _select(user_id, date, today=None) -> Select:
+        """Возвращает сумму расходов за год, месяц или день. Зависит от переданных значений"""
         if today:
             query: Select = select(func.sum(db.Price.amount)).\
                 where(db.Price.user_id == user_id, db.Price.date.between(date, today))

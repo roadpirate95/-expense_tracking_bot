@@ -3,10 +3,10 @@ version: '3'
 services:
 
     db:
-      image: crazycapivara/postgres-postgis:10-pgh3
+      image: postgres
       restart: always
       environment:
-        POSTGRES_PASSWORD: vlad
+        POSTGRES_PASSWORD: <пароль>
       volumes:
         - bornes:/var/lib/postgresql/data
       ports:
@@ -15,7 +15,9 @@ services:
     bot:
       build: .
       command:
-          bash -c "sudo chmod +x comands.sh && comands.sh"
+#           bash -c "alembic revision --autogenerate -m "Innit" && alembic upgrade head && cd bot && python server.py"
+           bash -c "cd bot && python server.py"
+
       depends_on:
         - db
 

@@ -28,7 +28,7 @@ async def create_categories() -> None:
 
 
 async def check_for_availability(user_id: int, word: str) -> bool:
-    """Проверяет на наличие word в бд"""
+    """Проверяет на наличие 'word' в бд"""
     all_user_categories = await db.Category.category_list(user_id)
     for category in all_user_categories:
         if word != category[0]:

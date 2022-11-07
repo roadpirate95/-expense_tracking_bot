@@ -2,13 +2,10 @@ from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, VARCHAR, Date, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from typing import Union
 
 from sqlalchemy import select, or_
 
 from bot import db
-
-# from bot.db.admin_model import __AdminModelUser, __AdminModelCategory, __AdminModelPrice
 
 
 BaseModel = declarative_base()
@@ -24,6 +21,7 @@ class User(BaseModel):
 
     @classmethod
     async def create_user(cls, **kwargs) -> None:
+        """Создает нового пользователя"""
         res = await db.database.session.get(cls, kwargs['user_id'])
         if not res:
             user = cls(**kwargs)
@@ -42,18 +40,21 @@ class Category(BaseModel):
 
     @classmethod
     async def category_list(cls, user_id):
+        """Возвращает все категории созданные пользователем и категории заложенные в бота"""
         return (await db.database.session.execute(
             select(cls.name_category, cls.aliases).
-            where(or_(cls.id_user == user_id, cls.id_user is None)))).all()
+            where(or_(cls.id_user == user_id, cls.id_user == None)))).all()
 
     @classmethod
     async def create_category(cls, user_id: int, category: str, alias=None):
+        """Создание и сохранение в бд пользовательской категории"""
         create_custom_category = cls(name_category=category, aliases=alias, id_user=user_id)
         db.database.session.add(create_custom_category)
         await db.database.session.commit()
 
     @staticmethod
     def parse_text(text) -> tuple[str, int]:
+        """Парсит текст занесения расхода"""
         arr = text.split(' ')
         return arr[0].lower(), int(arr[1])
 
@@ -70,6 +71,7 @@ class Price(BaseModel):
 
     @classmethod
     async def create_price(cls, **kwargs) -> None:
+        """Создает и сохраняет цену"""
         create_price_object = cls(**kwargs)
         db.database.session.add(create_price_object)
         await db.database.session.commit()
