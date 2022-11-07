@@ -15,8 +15,8 @@ services:
     bot:
       build: .
       command:
-#           bash -c "alembic revision --autogenerate -m "Innit" && alembic upgrade head && cd bot && python server.py"
-           bash -c "cd bot && python server.py"
+           bash -c "alembic revision --autogenerate -m "Innit" && alembic upgrade head && cd bot && python server.py"
+#           bash -c "cd bot && python server.py"
 
       depends_on:
         - db
